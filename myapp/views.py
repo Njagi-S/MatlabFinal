@@ -7,3 +7,9 @@ def service(request):
     return render(request, 'service-details.html')
 def starter(request):
     return render(request, 'starter-page.html')
+def about(request):
+    return render(request, 'about.html')
+def myservice(request):
+    return render(request, 'services.html')
+def doctors(request):
+    return render(request, 'doctors.html')
