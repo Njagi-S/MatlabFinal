@@ -13,3 +13,7 @@ def myservice(request):
     return render(request, 'services.html')
 def doctors(request):
     return render(request, 'doctors.html')
+def departments(request):
+    return render(request, 'departments.html')
+def contacts(request):
+    return render(request, 'contacts.html')
