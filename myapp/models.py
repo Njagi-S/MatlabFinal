@@ -19,3 +19,27 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+class Patient(models.Model):
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    dateofbirth = models.DateField()
+    gender = models.CharField(max_length=100)
+    email = models.EmailField()
+    phonenumber = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.firstname
+
+class Appointment(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    date = models.DateTimeField()
+    department = models.CharField(max_length=100)
+    doctor = models.CharField(max_length=100)
+    message = models.TextField()
+
+    def __str__(self):
+        return self.name
