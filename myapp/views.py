@@ -40,7 +40,7 @@ def contacts(request):
             message=request.POST['message'],
         )
         mycontacts.save()
-        return redirect('/contacts')
+        return redirect('/showcontacts')
 
     else:
         return render(request, 'contacts.html')
@@ -71,3 +71,12 @@ def delete(request,id):
     appoint = Appointment.objects.get(id=id)
     appoint.delete()
     return redirect('/show')
+
+def showcontacts(request):
+    allcontacts = Contacts.objects.all()
+    return render(request,'showcontacts.html',{'contact':allcontacts})
+
+def deletecontacts(request,id):
+    mycontacts = Contacts.objects.get(id=id)
+    mycontacts.delete()
+    return redirect('/showcontacts')
