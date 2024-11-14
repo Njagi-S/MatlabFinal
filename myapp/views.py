@@ -58,10 +58,16 @@ def appointment(request):
             message=request.POST['message'],
         )
         myappointment.save()
-        return redirect('/appointment')
+        return redirect('/show')
 
     else:
         return render(request,'appointment.html')
 
+def show(request):
+    allappointments = Appointment.objects.all()
+    return render(request,'show.html',{'appointment':allappointments})
 
-
+def delete(request,id):
+    appoint = Appointment.objects.get(id=id)
+    appoint.delete()
+    return redirect('/show')
