@@ -1,11 +1,25 @@
 from django.shortcuts import render, redirect
-from myapp.models import Appointment, Contacts
-from myapp.forms import AppointmentForm
+from myapp.models import Appointment, Contacts, Member
+from myapp.forms import AppointmentForm, ContactForm
 
 
 # Create your views here
 def index(request):
-    return render(request, 'index.html')
+    if request.method == 'POST':
+        if Member.objects.filter(
+                username=request.POST['username'],
+                password=request.POST['password'],
+        ).exists():
+
+            members = Member.objects.get(
+                username=request.POST['username'],
+                password=request.POST['password'],
+            )
+            return render(request, 'index.html', {'members': members})
+        else:
+            return render(request, 'login.html')
+    else:
+        return render(request, 'login.html')
 
 
 def service(request):
@@ -94,3 +108,32 @@ def update(request,id):
         return redirect('/show')
     else:
         return render(request, 'edit.html')
+
+def editcontacts(request,id):
+    editcontact = Contacts.objects.get(id=id)
+    return render(request, 'editcontacts.html', {"contact":editcontact})
+
+def updatecontacts(request,id):
+    updatecontactsinfo = Contacts.objects.get(id=id)
+    form = ContactForm(request.POST, instance=updatecontactsinfo)
+    if form.is_valid():
+        form.save()
+        return redirect('/showcontacts')
+    else:
+        return render(request, 'editcontacts.html')
+
+def register(request):
+    if request.method == 'POST':
+        members = Member(
+            name=request.POST['name'],
+            username=request.POST['username'],
+            password=request.POST['password'],
+        )
+        members.save()
+        return redirect('/login')
+    else:
+        return render(request, 'register.html')
+
+
+def login(request):
+    return render(request, 'login.html')
