@@ -67,3 +67,21 @@ class Member(models.Model):
 
     def __str__(self):
         return self.name  # Returns the name of the member when the object is printed.
+
+# Model for storing image data
+class ImageModel(models.Model):
+    image = models.ImageField(upload_to='images/')  # Field to upload images to 'images/' directory
+    title = models.CharField(max_length=50)  # Field for the image title
+    price = models.CharField(max_length=50)  # Field for the price (stored as text)
+
+    def __str__(self):
+        return self.title  # Display the title as the string representation
+
+# Model for Admin user
+# class Admin(models.Model):
+#     username = models.CharField(max_length=50)  # Field for the admin username
+#     password = models.CharField(max_length=50)  # Field for the admin password
+
+#     def __str__(self):
+#         return self.username  # Display the username as the string representation
+

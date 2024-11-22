@@ -1,5 +1,5 @@
 from django.contrib import admin  # Import the admin module for managing models via the Django admin interface
-from myapp.models import Student, Product, Patient, Appointment, Contacts, Member
+from myapp.models import Student, Product, Patient, Appointment, Contacts, Member, ImageModel
 
 # Register your models here.
 
@@ -26,3 +26,7 @@ admin.site.register(Contacts)
 # Register the Member model with the admin site.
 # Admin users can add, edit, and delete Member accounts directly from the admin interface.
 admin.site.register(Member)
+
+# Register the ImageModel with the admin site.
+# This allows managing ImageModel records directly from the Django admin panel
+admin.site.register(ImageModel)
