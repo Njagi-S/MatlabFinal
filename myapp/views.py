@@ -1,4 +1,11 @@
+import json
+
+import requests
+from django.http import HttpResponse
+from requests.auth import HTTPBasicAuth
+
 from django.shortcuts import render, redirect
+from myapp.credentials import MpesaAccessToken, LipanaMpesaPassword
 from myapp.models import Appointment, Contacts, Member, ImageModel
 from myapp.forms import AppointmentForm, ContactForm, ImageUploadForm
 
@@ -177,3 +184,43 @@ def imagedelete(request, id):
     image.delete()
     # Redirect to the 'showimage' page after successful deletion.
     return redirect('/showimage')
+
+def token(request):
+    consumer_key = '8mS9cYpGqSB4gMRew6aBdpdtP6DoToa8rb6XmExn6lGLigug'
+    consumer_secret = 'Ds2p7VX7uDXoObc8jK2NRrhZk6QGK9BhKhvFA08WVg8g3MBwF55u9TlDckSxWKyj'
+    api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+
+    r = requests.get(api_URL, auth=HTTPBasicAuth(
+        consumer_key, consumer_secret))
+    mpesa_access_token = json.loads(r.text)
+    validated_mpesa_access_token = mpesa_access_token["access_token"]
+
+    return render(request, 'token.html', {"token":validated_mpesa_access_token})
+
+def pay(request):
+    return render(request, 'pay.html')
+
+
+
+def stk(request):
+    if request.method =="POST":
+        phone = request.POST['phone']
+        amount = request.POST['amount']
+        access_token = MpesaAccessToken.validated_mpesa_access_token
+        api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        headers = {"Authorization": "Bearer %s" % access_token}
+        request = {
+            "BusinessShortCode": LipanaMpesaPassword.Business_short_code,
+            "Password": LipanaMpesaPassword.decode_password,
+            "Timestamp": LipanaMpesaPassword.lipa_time,
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": amount,
+            "PartyA": phone,
+            "PartyB": LipanaMpesaPassword.Business_short_code,
+            "PhoneNumber": phone,
+            "CallBackURL": "https://sandbox.safaricom.co.ke/mpesa/",
+            "AccountReference": "eMobilis",
+            "TransactionDesc": "Web Development Charges"
+        }
+        response = requests.post(api_url, json=request, headers=headers)
+        return HttpResponse("Success")
